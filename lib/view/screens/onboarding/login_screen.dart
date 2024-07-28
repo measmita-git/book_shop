@@ -2,7 +2,7 @@ import '../../../components/expanded_bottom_nav_bar.dart';
 import '../../../util/dt_colors.dart';
 import '../../../util/dt_styles.dart';
 import '../dashboard/home_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -30,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
   GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
 
 
-  final FirebaseAuthService _auth = FirebaseAuthService();
+  // final FirebaseAuthService _auth = FirebaseAuthService();
 
 
   TextEditingController _emailController = TextEditingController();
@@ -156,13 +156,15 @@ class _LoginScreenState extends State<LoginScreen> {
               height: screenHeight * 0.04,
             ),
             DTButton(
-              onClick: _signIn,
+              // onClick: _signIn,
               label: "Login",
               textColor: Colors.white,
               buttonColor: AppColors.primaryColor,
               borderRadius: 40,
               width: screenWidth * 0.6,
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.center, onClick: (){
+                Get.to(()=>HomePage());
+            },
             ),
           ],
         ),
@@ -170,34 +172,34 @@ class _LoginScreenState extends State<LoginScreen> {
 
   }
 
-  void _signIn() async {
-    setState(() {
-      _isSigning = true;
-    });
-
-    String email = _emailController.text.trim();
-    String password = _passwordController.text.trim();
-
-    try {
-      User? user = await _auth.signInWithEmailAndPassword(email, password);
-
-      setState(() {
-        _isSigning = false;
-      });
-
-      if (user != null) {
-        showToast(message: "User successfully logged in");
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => ExpandedBottomNavBar()));
-      } else {
-        showToast(message: "Login failed. Please try again.");
-      }
-    } catch (e) {
-      setState(() {
-        _isSigning = false;
-      });
-      showToast(message: "Error: ${e.toString()}");
-    }
-  }
+  // void _signIn() async {
+  //   setState(() {
+  //     _isSigning = true;
+  //   });
+  //
+  //   String email = _emailController.text.trim();
+  //   String password = _passwordController.text.trim();
+  //
+  //   try {
+  //     // User? user = await _auth.signInWithEmailAndPassword(email, password);
+  //
+  //     setState(() {
+  //       _isSigning = false;
+  //     });
+  //
+  //     if (user != null) {
+  //       showToast(message: "User successfully logged in");
+  //       Navigator.of(context).push(MaterialPageRoute(builder: (context) => ExpandedBottomNavBar()));
+  //     } else {
+  //       showToast(message: "Login failed. Please try again.");
+  //     }
+  //   } catch (e) {
+  //     setState(() {
+  //       _isSigning = false;
+  //     });
+  //     showToast(message: "Error: ${e.toString()}");
+  //   }
+  // }
 
 }
 

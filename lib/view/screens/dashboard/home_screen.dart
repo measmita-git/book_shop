@@ -1,7 +1,7 @@
 import '../../../util/dt_assets.dart';
 import '../../../util/dt_colors.dart';
 
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../onboarding/login_screen.dart';
@@ -101,7 +101,7 @@ class HomePage extends StatelessWidget {
             ),
             GestureDetector(
               onTap: (){
-                FirebaseAuth.instance.signOut();
+                // FirebaseAuth.instance.signOut();
                 Get.offAll(()=>LoginScreen());
               },
               child: ListTile(

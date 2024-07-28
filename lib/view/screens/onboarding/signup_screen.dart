@@ -1,6 +1,8 @@
+import 'package:book_bazaar/view/screens/dashboard/home_screen.dart';
+
 import '../../../components/expanded_bottom_nav_bar.dart';
 import '../../../model/firebase_auth_services.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -27,7 +29,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   bool _isSigningUp = false;
 
-  final FirebaseAuthService _auth = FirebaseAuthService();
+  // final FirebaseAuthService _auth = FirebaseAuthService();
 
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
@@ -178,7 +180,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 right: screenWidth * 0.09,
                                 top: screenHeight*0.01,bottom: screenHeight*0.02),
                             child: DTButton(
-                              onClick: _signUp,
+                              // onClick: _signUp,
                               label: 'Sign up',
                               buttonColor: AppColors.primaryColor,
                               textAlign: TextAlign.center,
@@ -186,7 +188,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               width: screenWidth * 0.7,
                               borderRadius: 30,
                               textSize: 14,
-                              textFont: FontWeight.w700,
+                              textFont: FontWeight.w700, onClick: (){
+                                Get.to(()=>HomePage());
+                            },
                             ),
                           ),
 
@@ -212,27 +216,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  void _signUp() async {
-
-    setState(() {
-      _isSigningUp = true;
-    });
-
-    String username = _usernameController.text;
-    String email = _emailController.text;
-    String password = _passwordController.text;
-
-    User? user = await _auth.signUpWithEmailAndPassword(email, password);
-
-    setState(() {
-      _isSigningUp = false;
-    });
-    if (user != null) {
-      showToast(message: "User is successfully created");
-      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ExpandedBottomNavBar()));
-    } else {
-      showToast(message: "Some error happend");
-    }
-  }
+  // void _signUp() async {
+  //
+  //   setState(() {
+  //     _isSigningUp = true;
+  //   });
+  //
+  //   String username = _usernameController.text;
+  //   String email = _emailController.text;
+  //   String password = _passwordController.text;
+  //
+  //   User? user = await _auth.signUpWithEmailAndPassword(email, password);
+  //
+  //   setState(() {
+  //     _isSigningUp = false;
+  //   });
+  //   if (user != null) {
+  //     showToast(message: "User is successfully created");
+  //     Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ExpandedBottomNavBar()));
+  //   } else {
+  //     showToast(message: "Some error happend");
+  //   }
+  // }
 
 }
