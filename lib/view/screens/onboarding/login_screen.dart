@@ -1,23 +1,17 @@
-import '../../../components/expanded_bottom_nav_bar.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../util/dt_colors.dart';
 import '../../../util/dt_styles.dart';
-import '../dashboard/home_screen.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/routes/transitions_type.dart';
-import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import '../../../components/dt_button.dart';
 import '../../../components/dt_textfield.dart';
-import '../../../global/common/toast.dart';
-import '../../../model/firebase_auth_services.dart';
 import '../../../util/dt_assets.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final VoidCallback showRegisterPage;
+  const LoginScreen({Key? key, required this.showRegisterPage}):super(key: key);
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -25,17 +19,20 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
 
-  bool _isSigning = false;
+
   bool hidePassword = true;
   GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
 
 
-  // final FirebaseAuthService _auth = FirebaseAuthService();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
-
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-
+  Future signIn() async {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim()
+    );
+  }
 
   @override
   void dispose() {
@@ -44,7 +41,6 @@ class _LoginScreenState extends State<LoginScreen> {
     _passwordController.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -64,10 +60,8 @@ class _LoginScreenState extends State<LoginScreen> {
     double screenHeight = MediaQuery.of(context).size.height;
 
     return SingleChildScrollView(
-
-        child: Column(
-
-          children: [
+      child: Column(
+        children: [
             Image.asset(DTImages.lframe),
             SizedBox(
               height: screenHeight * 0.02,
@@ -153,53 +147,43 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             SizedBox(
-              height: screenHeight * 0.04,
+              height: screenHeight * 0.02,
             ),
             DTButton(
-              // onClick: _signIn,
+              onClick: signIn,
               label: "Login",
               textColor: Colors.white,
               buttonColor: AppColors.primaryColor,
               borderRadius: 40,
               width: screenWidth * 0.6,
-              textAlign: TextAlign.center, onClick: (){
-                Get.to(()=>HomePage());
-            },
+              textAlign: TextAlign.center,
+
             ),
+            SizedBox(height: 20.h,),
+            Wrap(
+              spacing: 4,
+              children: [
+                Text('Not a member ?',style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
+                ),),
+                InkWell(
+                  onTap: widget.showRegisterPage,
+
+                  child: Text('Register Now',style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.primaryColor,
+                  ),),
+                )
+              ],
+            )
           ],
         ),
       );
 
   }
 
-  // void _signIn() async {
-  //   setState(() {
-  //     _isSigning = true;
-  //   });
-  //
-  //   String email = _emailController.text.trim();
-  //   String password = _passwordController.text.trim();
-  //
-  //   try {
-  //     // User? user = await _auth.signInWithEmailAndPassword(email, password);
-  //
-  //     setState(() {
-  //       _isSigning = false;
-  //     });
-  //
-  //     if (user != null) {
-  //       showToast(message: "User successfully logged in");
-  //       Navigator.of(context).push(MaterialPageRoute(builder: (context) => ExpandedBottomNavBar()));
-  //     } else {
-  //       showToast(message: "Login failed. Please try again.");
-  //     }
-  //   } catch (e) {
-  //     setState(() {
-  //       _isSigning = false;
-  //     });
-  //     showToast(message: "Error: ${e.toString()}");
-  //   }
-  // }
 
 }
 

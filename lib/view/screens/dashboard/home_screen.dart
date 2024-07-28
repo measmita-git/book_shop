@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+
 import '../../../util/dt_assets.dart';
 import '../../../util/dt_colors.dart';
 
@@ -13,762 +15,157 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+
+  final user = FirebaseAuth.instance.currentUser!;
+
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Book Bazaar',
-          style: GoogleFonts.alatsi(
-            fontSize: 26.sp,
-            fontWeight: FontWeight.w500,
-            color: AppColors.primaryColor,
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: Image.asset(
-              DTImages.cart,
-              color: AppColors.primaryColor,
-              width: 24,
-              height: 24,
-            ),
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => CartScreen(),
-              ));
-            },
-          ),
-        ],
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundImage: AssetImage('assets/user_profile.jpg'),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Welcome, User!',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.home),
-              title: Text('Home'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.category),
-              title: Text('Categories'),
-              onTap: () {
-                // Handle Categories tap
-              },
-            ),
-
-            ListTile(
-              leading: Icon(Icons.new_releases),
-              title: Text('New Releases'),
-              onTap: () {
-                // Handle New Releases tap
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.library_books),
-              title: Text('My Library'),
-              onTap: () {
-                // Handle My Library tap
-              },
-            ),
-            GestureDetector(
-              onTap: (){
-                // FirebaseAuth.instance.signOut();
-                Get.offAll(()=>LoginScreen());
-              },
-              child: ListTile(
-                leading: Icon(Icons.favorite),
-                title: Text('Logout'),
-                onTap: () {
-                  // Handle Wishlist tap
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
+      appBar: _buildAppBar(context),
+      drawer: _buildDrawer(context),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             FeaturedBookBanner(),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
-                child: Row(
-                  children: [
-                    _buildCategoryContainer('Fiction'),
-                    SizedBox(width: 20.w),
-                    _buildCategoryContainer('Biography'),
-                    SizedBox(width: 20.w),
-                    _buildCategoryContainer('Poetry'),
-                    SizedBox(width: 20.w),
-                    _buildCategoryContainer('Comics'),
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 10.h),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'New Releases',
-                    style: GoogleFonts.roboto(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Text(
-                    'View All',
-                    style: GoogleFonts.roboto(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.primaryColor,
-                      decoration: TextDecoration.underline,
-                      decorationColor: AppColors.primaryColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 10.h),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    Column(
-                      children: [
-                        Image.asset(
-                          DTImages.n1,
-                          height: 300.h,
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          'इजोरिया',
-                          style: GoogleFonts.roboto(
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 20.w,
-                    ),
-                    Column(
-                      children: [
-                        Image.asset(
-                          DTImages.n2,
-                          height: 300.h,
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          'त्यस बखतको नेपाल',
-                          style: GoogleFonts.roboto(
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 20.w,
-                    ),
-                    Column(
-                      children: [
-                        Image.asset(
-                          DTImages.n3,
-                          height: 300.h,
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          'दरबारको दुःखान्त',
-                          style: GoogleFonts.roboto(
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 20.w,
-                    ),
-                    Column(
-                      children: [
-                        Image.asset(
-                          DTImages.n4,
-                          height: 300.h,
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          'सम्बन्धहरू',
-                          style: GoogleFonts.roboto(
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 20.w,
-                    ),
-                    Column(
-                      children: [
-                        Image.asset(
-                          DTImages.n5,
-                          height: 300.h,
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          'पल्पसा क्याफे',
-                          style: GoogleFonts.roboto(
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 20.w,
-                    ),
-                    Column(
-                      children: [
-                        Image.asset(
-                          DTImages.n6,
-                          height: 300.h,
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          'Beyond Possible',
-                          style: GoogleFonts.roboto(
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 20.w,
-                    ),
-                    Column(
-                      children: [
-                        Image.asset(
-                          DTImages.n7,
-                          height: 300.h,
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          'The Talking Points',
-                          style: GoogleFonts.roboto(
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 20.w,
-                    ),
-                    Column(
-                      children: [
-                        Image.asset(
-                          DTImages.n8,
-                          height: 300.h,
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          'Cabals and Cartels',
-                          style: GoogleFonts.roboto(
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 20.w,
-                    ),
-                    Column(
-                      children: [
-                        Image.asset(
-                          DTImages.n9,
-                          height: 300.h,
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          'Between Queens and the Cities',
-                          style: GoogleFonts.roboto(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 20.w,
-                    ),
-                    Column(
-                      children: [
-                        Image.asset(
-                          DTImages.n10,
-                          height: 300.h,
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          'Lost in Transition',
-                          style: GoogleFonts.roboto(
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 20.w,
-                    ),
-                    Column(
-                      children: [
-                        Image.asset(
-                          DTImages.n11,
-                          height: 300.h,
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          'Sapiens',
-                          style: GoogleFonts.roboto(
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 20.w,
-                    ),
-                    Column(
-                      children: [
-                        Image.asset(
-                          DTImages.n12,
-                          height: 300.h,
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          'Dignified Menstruation',
-                          style: GoogleFonts.roboto(
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 30.h),
-              child: Row(
-                children: [
-                  _buildCategoryContainer('All Books'),
-                  SizedBox(width: 20.w),
-                  _buildCategoryContainer('Bestsellers'),
-                  SizedBox(width: 20.w),
-                  _buildCategoryContainer('New Realese'),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 10.h),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Nepali biographies and memoirs',
-                    style: GoogleFonts.roboto(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Text(
-                    'View All',
-                    style: GoogleFonts.roboto(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.primaryColor,
-                      decoration: TextDecoration.underline,
-                      decorationColor: AppColors.primaryColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 10.h),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    Column(
-                      children: [
-                        Image.asset(
-                          DTImages.v1,
-                          height: 300.h,
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          'रुकमाङ्गद कटवाल',
-                          style: GoogleFonts.roboto(
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 20.w,
-                    ),
-                    Column(
-                      children: [
-                        Image.asset(
-                          DTImages.v2,
-                          height: 300.h,
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          'मैले देखेको दरबार',
-                          style: GoogleFonts.roboto(
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 20.w,
-                    ),
-                    Column(
-                      children: [
-                        Image.asset(
-                          DTImages.v3,
-                          height: 300.h,
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          'महावीर पुन',
-                          style: GoogleFonts.roboto(
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 20.w,
-                    ),
-                    Column(
-                      children: [
-                        Image.asset(
-                          DTImages.v4,
-                          height: 300.h,
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          'अच्युतकृष्ण खरेल',
-                          style: GoogleFonts.roboto(
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 20.w,
-                    ),
-                    Column(
-                      children: [
-                        Image.asset(
-                          DTImages.v5,
-                          height: 300.h,
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          'मान्छेको मन',
-                          style: GoogleFonts.roboto(
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 20.w,
-                    ),
-                    Column(
-                      children: [
-                        Image.asset(
-                          DTImages.v6,
-                          height: 300.h,
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          'राष्ट्र-परराष्ट्र',
-                          style: GoogleFonts.roboto(
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 20.w,
-                    ),
-                    Column(
-                      children: [
-                        Image.asset(
-                          DTImages.v7,
-                          height: 300.h,
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          'सन्दुक रूइत',
-                          style: GoogleFonts.roboto(
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 20.w,
-                    ),
-                    Column(
-                      children: [
-                        Image.asset(
-                          DTImages.v8,
-                          height: 300.h,
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          'कूटनीति र राजनीति',
-                          style: GoogleFonts.roboto(
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 20.w,
-                    ),
-                    Column(
-                      children: [
-                        Image.asset(
-                          DTImages.v9,
-                          height: 300.h,
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          'खुसी',
-                          style: GoogleFonts.roboto(
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 20.w,
-                    ),
-                    Column(
-                      children: [
-                        Image.asset(
-                          DTImages.v10,
-                          height: 300.h,
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          'फूलको आँखामा',
-                          style: GoogleFonts.roboto(
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 10.h),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Recently Viewed',
-                    style: GoogleFonts.roboto(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 10.h),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    Column(
-                      children: [
-                        Image.asset(
-                          DTImages.r1,
-                          height: 300.h,
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          'The Kite Runner',
-                          style: GoogleFonts.roboto(
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 20.w,
-                    ),
-                    Column(
-                      children: [
-                        Image.asset(
-                          DTImages.r2,
-                          height: 300.h,
-                        ),
-                        SizedBox(
-                          height: 6.h,
-                        ),
-                        Text(
-                          'All Roads Lead North',
-                          style: GoogleFonts.roboto(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 40.h,
-            ),
+            _buildHorizontalScroll([
+              _buildCategoryContainer('Fiction'),
+              _buildCategoryContainer('Biography'),
+              _buildCategoryContainer('Poetry'),
+              _buildCategoryContainer('Comics'),
+            ]),
+            _buildSectionTitle('New Releases', 'View All'),
+            _buildHorizontalScroll([
+              _buildBookColumn(DTImages.n1, 'इजोरिया'),
+              _buildBookColumn(DTImages.n2, 'त्यस बखतको नेपाल'),
+              _buildBookColumn(DTImages.n3, 'दरबारको दुःखान्त'),
+              _buildBookColumn(DTImages.n4, 'सम्बन्धहरू'),
+              _buildBookColumn(DTImages.n5, 'पल्पसा क्याफे'),
+              _buildBookColumn(DTImages.n6, 'Beyond Possible'),
+              _buildBookColumn(DTImages.n7, 'The Talking Points'),
+              _buildBookColumn(DTImages.n8, 'Cabals and Cartels'),
+              _buildBookColumn(DTImages.n9, 'Between Queens and the Cities'),
+              _buildBookColumn(DTImages.n10, 'Lost in Transition'),
+              _buildBookColumn(DTImages.n11, 'Sapiens'),
+              _buildBookColumn(DTImages.n12, 'Dignified Menstruation'),
+            ]),
+            _buildHorizontalScroll([
+              _buildCategoryContainer('All Books'),
+              _buildCategoryContainer('Bestsellers'),
+              _buildCategoryContainer('New Release'),
+            ]),
+            _buildSectionTitle('Nepali biographies and memoirs', 'View All'),
+            _buildHorizontalScroll([
+              _buildBookColumn(DTImages.v1, 'रुकमाङ्गद कटवाल'),
+              _buildBookColumn(DTImages.v2, 'मैले देखेको दरबार'),
+              _buildBookColumn(DTImages.v3, 'महावीर पुन'),
+              _buildBookColumn(DTImages.v4, 'अच्युतकृष्ण खरेल'),
+              _buildBookColumn(DTImages.v5, 'मान्छेको मन'),
+              _buildBookColumn(DTImages.v6, 'राष्ट्र-परराष्ट्र'),
+              _buildBookColumn(DTImages.v7, 'सन्दुक रूइत'),
+              _buildBookColumn(DTImages.v8, 'कूटनीति र राजनीति'),
+              _buildBookColumn(DTImages.v9, 'खुसी'),
+              _buildBookColumn(DTImages.v10, 'फूलको आँखामा'),
+            ]),
+            _buildSectionTitle('Recently Viewed'),
+            _buildHorizontalScroll([
+              _buildBookColumn(DTImages.r1, 'The Kite Runner'),
+              _buildBookColumn(DTImages.r2, 'All Roads Lead North'),
+            ]),
+            SizedBox(height: 40.h),
           ],
         ),
       ),
+    );
+  }
+
+  AppBar _buildAppBar(BuildContext context) {
+    return AppBar(
+      title: Text(
+        'Book Bazaar',
+        style: GoogleFonts.alatsi(
+          fontSize: 26.sp,
+          fontWeight: FontWeight.w500,
+          color: AppColors.primaryColor,
+        ),
+      ),
+      actions: [
+        IconButton(
+          icon: Image.asset(
+            DTImages.cart,
+            color: AppColors.primaryColor,
+            width: 24,
+            height: 24,
+          ),
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => CartScreen(),
+            ));
+          },
+        ),
+      ],
+    );
+  }
+
+  Drawer _buildDrawer(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            decoration: BoxDecoration(color: Colors.blue),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CircleAvatar(
+                  radius: 30,
+                  backgroundImage: AssetImage('assets/user_profile.jpg'),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  '${user.email ?? 'Guest'}',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
+
+              ],
+            ),
+          ),
+          _buildDrawerItem(Icons.home, 'Home', () => Navigator.pop(context)),
+          _buildDrawerItem(Icons.category, 'Categories', () {}),
+          _buildDrawerItem(Icons.new_releases, 'New Releases', () {}),
+          _buildDrawerItem(Icons.library_books, 'My Library', () {}),
+          SizedBox(height: 200.h,),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              MaterialButton(
+
+
+                onPressed: (){
+                  FirebaseAuth.instance.signOut();
+                },
+                color: AppColors.primaryColor,
+                child: Text('Sign out'),
+
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  ListTile _buildDrawerItem(IconData icon, String title, VoidCallback onTap) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(title),
+      onTap: onTap,
     );
   }
 
@@ -781,14 +178,69 @@ class HomePage extends StatelessWidget {
         borderRadius: BorderRadius.circular(9.r),
         border: Border.all(color: Colors.transparent),
       ),
-      child: Align(
-        alignment: Alignment.center,
+      child: Center(
         child: Text(
           text,
+          style: GoogleFonts.roboto(fontSize: 12.sp),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBookColumn(String imagePath, String title) {
+    return Column(
+      children: [
+        Image.asset(imagePath, height: 300.h),
+        SizedBox(height: 6.h),
+        Text(
+          title,
           style: GoogleFonts.roboto(
-            fontSize: 12.sp,
+            fontSize: 22.sp,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
           ),
         ),
+      ],
+    );
+  }
+
+  Widget _buildHorizontalScroll(List<Widget> children) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: children,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title, [String? actionText]) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 10.h),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: GoogleFonts.roboto(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          if (actionText != null)
+            Text(
+              actionText,
+              style: GoogleFonts.roboto(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+                color: AppColors.primaryColor,
+                decoration: TextDecoration.underline,
+                decorationColor: AppColors.primaryColor,
+              ),
+            ),
+        ],
       ),
     );
   }
