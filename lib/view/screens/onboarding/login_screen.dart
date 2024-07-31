@@ -1,190 +1,124 @@
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../util/dt_colors.dart';
-import '../../../util/dt_styles.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import '../../../components/dt_button.dart';
-import '../../../components/dt_textfield.dart';
-import '../../../util/dt_assets.dart';
+import '../../../components/dt_text_field.dart';
 
+import 'package:flutter/material.dart';
 
-class LoginScreen extends StatefulWidget {
-  final VoidCallback showRegisterPage;
-  const LoginScreen({Key? key, required this.showRegisterPage}):super(key: key);
+import '../../../services/database/auth_services.dart';
+import '../Home/widget/home_screen.dart';
+
+class LoginPage extends StatefulWidget {
+  final void Function()? onTap;
+
+  const LoginPage({super.key, required this.onTap});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginPageState extends State<LoginPage> {
+  // Text editing controllers
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
+  //login funtion
 
-  bool hidePassword = true;
-  GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
+  //register method
+  void login() async {
+    // Check if passwords match
 
+    final _authService = AuthService();
 
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+      try {
+        // Attempt to create user
+        await _authService.signInWithEmailPassword(
+          emailController.text,
+          passwordController.text,
+        );
 
-  Future signIn() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim()
-    );
-  }
+      } catch (e) {
+        // Display any errors
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(e.toString()),
 
-  @override
-  void dispose() {
-
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
+          ),
+        );
+      }
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      body: Builder(
-        builder: (context) => Form(
-          key: globalFormKey,
-          child: _loginUI(context),
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Logo
+            Icon(
+              Icons.lock_open_rounded,
+              size: 100,
+              color: Theme.of(context).colorScheme.inversePrimary,
+            ),
+            const SizedBox(height: 25),
+            // App slogan or message
+            Text(
+              "Book Delivery App",
+              style: TextStyle(
+                fontSize: 16,
+                color: Theme.of(context).colorScheme.onBackground,
+              ),
+            ),
+            const SizedBox(height: 25),
+            // Email text field
+            MyTextField(
+              controller: emailController,
+              hintText: "Email",
+              obscureText: false,
+            ),
+            const SizedBox(height: 10),
+            // Password text field
+            MyTextField(
+              controller: passwordController,
+              hintText: "Password",
+              obscureText: true,
+            ),
+            const SizedBox(height: 25),
+            // Sign in button
+            MyButton(
+              text: "Sign In",
+              onTap: login,
+            ),
+            const SizedBox(height: 25),
+            // Not a member? Register now
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Not a member?",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                GestureDetector(
+                  onTap: widget.onTap,
+                  child: Text(
+                    "Register now",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.inversePrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
   }
-
-  Widget _loginUI(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-            Image.asset(DTImages.lframe),
-            SizedBox(
-              height: screenHeight * 0.02,
-            ),
-            Text(
-              'Login',
-              style: AppTextStyles.muliLargeTextStyle.copyWith(
-                fontSize: 30,
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(
-                  left: screenWidth * 0.1, top: screenHeight * 0.03),
-              child: Row(
-                children: [
-                  Text(
-                    'Email',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: screenHeight * 0.01,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: AppColors.borderColor,
-                ),
-                borderRadius: BorderRadius.circular(40),
-              ),
-              child: DTTextField(
-                placeholder: '',
-                borderWidth: 0.8,
-                borderColor: Colors.transparent,
-                width: screenWidth * 0.8,
-                borderRadius: 100,
-                height: screenHeight * 0.07,
-                controller: _emailController,
-
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(
-                  left: screenWidth * 0.1, top: screenHeight * 0.03),
-              child: Row(
-                children: [
-                  Text(
-                    'Password',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: screenHeight * 0.01,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: AppColors.borderColor,
-                ),
-                borderRadius: BorderRadius.circular(40),
-              ),
-              child: DTTextField(
-                placeholder: '',
-                borderWidth: 0.8,
-                borderColor: Colors.transparent,
-                width: screenWidth * 0.8,
-                borderRadius: 100,
-                height: screenHeight * 0.07,
-                controller: _passwordController,
-
-              ),
-            ),
-            SizedBox(
-              height: screenHeight * 0.02,
-            ),
-            DTButton(
-              onClick: signIn,
-              label: "Login",
-              textColor: Colors.white,
-              buttonColor: AppColors.primaryColor,
-              borderRadius: 40,
-              width: screenWidth * 0.6,
-              textAlign: TextAlign.center,
-
-            ),
-            SizedBox(height: 20.h,),
-            Wrap(
-              spacing: 4,
-              children: [
-                Text('Not a member ?',style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                ),),
-                InkWell(
-                  onTap: widget.showRegisterPage,
-
-                  child: Text('Register Now',style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.primaryColor,
-                  ),),
-                )
-              ],
-            )
-          ],
-        ),
-      );
-
-  }
-
-
 }
-
-

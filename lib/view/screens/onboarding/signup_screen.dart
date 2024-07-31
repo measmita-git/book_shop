@@ -1,229 +1,138 @@
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../util/dt_colors.dart';
-import '../../../util/dt_styles.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:book_bazaar/services/database/auth_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import '../../../components/dt_button.dart';
-import '../../../components/dt_textfield.dart';
-import '../../../util/dt_assets.dart';
+import '../../../components/dt_text_field.dart';
 
+class RegisterPage extends StatefulWidget {
+  final void Function()? onTap;
 
-class SignUpScreen extends StatefulWidget {
-  final VoidCallback showLoginPage;
-  const SignUpScreen({Key? key, required this.showLoginPage}):super(key: key);
+  const RegisterPage({super.key, required this.onTap});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _RegisterPageState extends State<RegisterPage> {
 
-  bool showLoginPage = true;
-  bool hidePassword = true;
-  GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
 
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  //register method
+  void register() async {
+    // Check if passwords match
 
-  Future signUp() async {
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim()
-    );
+    final _authService = AuthService();
+    if (passwordController.text == confirmPasswordController.text) {
+      try {
+        // Attempt to create user
+        await _authService.signUpWithEmailPassword(
+          emailController.text,
+          passwordController.text,
+        );
+
+      } catch (e) {
+        // Display any errors
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(e.toString()),
+
+          ),
+        );
+      }
+    } else {
+      // Passwords don't match, show an error
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error'),
+          content: Text('Passwords do not match.'),
+
+        ),
+      );
+    }
   }
-
-  @override
-  void dispose() {
-
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      body: Builder(
-        builder: (context) => Form(
-          key: globalFormKey,
-          child: _loginUI(context),
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Logo
+            Icon(
+              Icons.lock_open_rounded,
+              size: 100,
+              color: Theme.of(context).colorScheme.inversePrimary,
+            ),
+            const SizedBox(height: 25),
+            // App slogan or message
+            Text(
+              "Lets create an account fopr you",
+              style: TextStyle(
+                fontSize: 16,
+                color: Theme.of(context).colorScheme.onBackground,
+              ),
+            ),
+            const SizedBox(height: 25),
+            // Email text field
+            MyTextField(
+              controller: emailController,
+              hintText: "Email",
+              obscureText: false,
+            ),
+            const SizedBox(height: 10),
+            // Password text field
+            MyTextField(
+              controller: passwordController,
+              hintText: "Password",
+              obscureText: true,
+            ),
+            const SizedBox(height: 10),
+            // confirm Password text field
+            MyTextField(
+              controller: confirmPasswordController,
+              hintText: "Confirm Password",
+              obscureText: true,
+            ),
+            const SizedBox(height: 25),
+            // Sign in button
+            MyButton(
+              text: "Sign In",
+              onTap: register,
+            ),
+            const SizedBox(height: 25),
+            // Not a member? Register now
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Already have an account?",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                GestureDetector(
+                  onTap: widget.onTap,
+                  child: Text(
+                    "Login now",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.inversePrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
   }
-
-  Widget _loginUI(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
-    return SingleChildScrollView(
-
-      child: Column(
-
-        children: [
-          Image.asset(DTImages.lframe),
-          SizedBox(
-            height: screenHeight * 0.01,
-          ),
-          Text(
-            'Register Here!',
-            style: AppTextStyles.muliLargeTextStyle.copyWith(
-              fontSize: 30,
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(
-                left: screenWidth * 0.1, top: screenHeight * 0.03),
-            child: Row(
-              children: [
-                Text(
-                  'Email',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: screenHeight * 0.01,
-          ),
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: AppColors.borderColor,
-              ),
-              borderRadius: BorderRadius.circular(40),
-            ),
-            child: DTTextField(
-              placeholder: '',
-              borderWidth: 0.8,
-              borderColor: Colors.transparent,
-              width: screenWidth * 0.8,
-              borderRadius: 100,
-              height: screenHeight * 0.07,
-              controller: _emailController,
-
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(
-                left: screenWidth * 0.1, top: screenHeight * 0.01),
-            child: Row(
-              children: [
-                Text(
-                  'Password',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: screenHeight * 0.01,
-          ),
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: AppColors.borderColor,
-              ),
-              borderRadius: BorderRadius.circular(40),
-            ),
-            child: DTTextField(
-              placeholder: '',
-              borderWidth: 0.8,
-              borderColor: Colors.transparent,
-              width: screenWidth * 0.8,
-              borderRadius: 100,
-              height: screenHeight * 0.07,
-              controller: _passwordController,
-
-            ),
-          ),
-
-          Container(
-            margin: EdgeInsets.only(
-                left: screenWidth * 0.1, top: screenHeight * 0.01),
-            child: Row(
-              children: [
-                Text(
-                  'Confirm Password',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: screenHeight * 0.01,
-          ),
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: AppColors.borderColor,
-              ),
-              borderRadius: BorderRadius.circular(40),
-            ),
-            child: DTTextField(
-              placeholder: '',
-              borderWidth: 0.8,
-              borderColor: Colors.transparent,
-              width: screenWidth * 0.8,
-              borderRadius: 100,
-              height: screenHeight * 0.07,
-              controller: _passwordController,
-
-            ),
-          ),
-          SizedBox(
-            height: screenHeight * 0.02,
-          ),
-          DTButton(
-            onClick: signUp,
-            label: "Sign Up",
-            textColor: Colors.white,
-            buttonColor: AppColors.primaryColor,
-            borderRadius: 40.r,
-            width: screenWidth * 0.6,
-            height: 50.h,
-
-            textAlign: TextAlign.center,
-
-          ),
-          SizedBox(height: 20.h,),
-          Wrap(
-            spacing: 4,
-            children: [
-              Text('Not a member ?',style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w600,
-              ),),
-              InkWell(
-                onTap: widget.showLoginPage,
-
-                child: Text('Register Now',style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.primaryColor,
-                ),),
-              )
-            ],
-          )
-        ],
-      ),
-    );
-
-  }
-
 }

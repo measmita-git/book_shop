@@ -1,17 +1,19 @@
+import 'package:book_bazaar/auth/login_or_register.dart';
 
-import 'package:book_bazaar/auth/auth_page.dart';
-import 'package:book_bazaar/components/main_page.dart';
-import 'package:book_bazaar/view/screens/onboarding/onboarding_view.dart';
+import 'package:book_bazaar/services/database/auth_gate.dart';
+import 'package:book_bazaar/themes/theme_provider.dart';
+import 'package:book_bazaar/view/screens/onboarding/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-// import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+
 import 'package:provider/provider.dart';
-import 'package:get/get.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:khalti/khalti.dart';
+import 'model/book_store.dart';
 
 
-void main() async {
+void main() async{
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
       options: FirebaseOptions(
@@ -22,26 +24,36 @@ void main() async {
         storageBucket: 'myapp-b9yt18.appspot.com', messagingSenderId: '187820135619',
       )
   );
-  runApp(MyApp());
+
+  await Khalti.init(
+    publicKey: 'test_public_key_fef331272f8b47f3b4022d377ad52b85',
+    enabledDebugging: false,
+  );
+
+  runApp(
+    MultiProvider(
+      providers: [
+
+        //theme provider
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+
+        //restaurant provider
+        ChangeNotifierProvider(create: (context) => Restaurant()),
+      ],
+      child: const MyApp(),
+    )
+  );
 }
 
-
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(430, 930),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      child: GetMaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Book Bazaar',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: MainPage(),
-      ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: const AuthGate(),
+      theme: Provider.of<ThemeProvider>(context).themeData,
     );
   }
 }
-
