@@ -198,7 +198,7 @@ import '../../../../components/current_location.dart';
 import '../../../../components/drawer.dart';
 import '../../../../components/dt_description_box.dart';
 import '../../../../components/dt_sliver_app_bar.dart';
-import '../../../../components/food_tile.dart';
+import '../../../../components/book_tile.dart';
 import '../../../../components/tab_bar.dart';
 import '../../../../model/book.dart';
 import '../../../../model/book_store.dart';
@@ -246,9 +246,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         padding: EdgeInsets.zero,
         itemBuilder: (context, index) {
           final food = categoryMenu[index];
-          return FoodTile(
-            food: food,
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=> FoodPage(food: food))),
+          return BookTile(
+            book: food,
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=> FoodPage(book: food))),
           );
         },
       );

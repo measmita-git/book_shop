@@ -9,11 +9,11 @@ import '../../../model/book.dart';
 import '../../../model/book_store.dart';
 
 class FoodPage extends StatefulWidget {
-  final Book food;
+  final Book book;
   final Map<Addon, bool> selectedAddons = {};
 
-  FoodPage({super.key, required this.food}) {
-    for (Addon addon in food.availableAddons) {
+  FoodPage({super.key, required this.book}) {
+    for (Addon addon in book.availableAddons) {
       selectedAddons[addon] = false;
     }
   }
@@ -32,7 +32,7 @@ class _FoodPageState extends State<FoodPage> {
 
     //format the selected addons
     List<Addon> currentlySelectedAddons = [];
-    for(Addon addon in widget.food.availableAddons){
+    for(Addon addon in widget.book.availableAddons){
       if(widget.selectedAddons[addon] == true){
         currentlySelectedAddons.add(addon);
       }
@@ -51,14 +51,14 @@ class _FoodPageState extends State<FoodPage> {
             body: SingleChildScrollView(
           child: Column(
             children: [
-              Image.asset(widget.food.imagePath),
+              Image.asset(widget.book.imagePath),
               Padding(
                 padding: const EdgeInsets.all(25.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.food.name,
+                      widget.book.name,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
@@ -68,7 +68,7 @@ class _FoodPageState extends State<FoodPage> {
                       height: 10,
                     ),
                     Text(
-                      widget.food.description,
+                      widget.book.description,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -76,10 +76,10 @@ class _FoodPageState extends State<FoodPage> {
                     ),
                     ListView.builder(
                         shrinkWrap: true,
-                        itemCount: widget.food.availableAddons.length,
+                        itemCount: widget.book.availableAddons.length,
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
-                          Addon addon = widget.food.availableAddons[index];
+                          Addon addon = widget.book.availableAddons[index];
                           return CheckboxListTile(
                             title: Text(addon.name),
                             subtitle: Text(
@@ -101,7 +101,7 @@ class _FoodPageState extends State<FoodPage> {
               ),
               MyButton(
                 text: "Add to Cart",
-                onTap: () => addToCart(widget.food, widget.selectedAddons),
+                onTap: () => addToCart(widget.book, widget.selectedAddons),
               ),
               const SizedBox(
                 height: 25,

@@ -5,14 +5,14 @@ import '../model/book.dart';
 
 class QuantitySelector extends StatelessWidget {
   final int quantity;
-  final Book food;
+  final Book book;
   final VoidCallback onIncrement;
   final VoidCallback onDecrement;
 
   const QuantitySelector({
     super.key,
     required this.quantity,
-    required this.food,
+    required this.book,
     required this.onDecrement,
     required this.onIncrement,
   });

@@ -77,7 +77,7 @@ class MyCartTile extends StatelessWidget {
                       // Quantity selector
                       QuantitySelector(
                         quantity: cartItem.quantity,
-                        food: cartItem.book,
+                        book: cartItem.book,
                         onDecrement: () {
                           restaurant.removeFromCart(cartItem);
                         },

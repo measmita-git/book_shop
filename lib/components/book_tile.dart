@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import '../model/book.dart';
 
-class FoodTile extends StatelessWidget {
-  final Book food;
+class BookTile extends StatelessWidget {
+  final Book book;
   final void Function()? onTap;
 
-  const FoodTile({
+  const BookTile({
     super.key,
-    required this.food,
+    required this.book,
     required this.onTap,
   });
 
@@ -28,15 +28,15 @@ class FoodTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      food.name,
+                      book.name,
                       style: Theme.of(context).textTheme.headline6, // Adjust text style as needed
                     ),
                     Text(
-                      '\$${food.price.toStringAsFixed(2)}', // Format price to 2 decimal places
+                      '\$${book.price.toStringAsFixed(2)}', // Format price to 2 decimal places
                       style: Theme.of(context).textTheme.subtitle1, // Adjust text style as needed
                     ),
                     Text(
-                      food.description,
+                      book.description,
                       maxLines: 2, // Limit description to 2 lines
                       overflow: TextOverflow.ellipsis, // Add ellipsis if description is too long
                       style: Theme.of(context).textTheme.bodyText2, // Adjust text style as needed
@@ -49,7 +49,7 @@ class FoodTile extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.asset(
-                  food.imagePath,
+                  book.imagePath,
                  
                   height: 100, 
                  

@@ -5,7 +5,7 @@ import 'cart_item.dart';
 import 'book.dart'; // Make sure this import path is correct
 
 class Restaurant extends ChangeNotifier {
-  // List of food menu
+  // List of book
   final List<Book> _menu = [
     // Fiction
     Book(

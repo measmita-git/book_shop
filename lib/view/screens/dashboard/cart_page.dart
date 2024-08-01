@@ -14,15 +14,15 @@ class CartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<Restaurant>(
-      builder: (context, restaurant, child) {
+      builder: (context, bookstore, child) {
         // Check if the restaurant is null or its cart is not initialized
-        if (restaurant == null) {
+        if (bookstore == null) {
           return Scaffold(
             body: Center(child: Text('Restaurant not available')),
           );
         }
 
-        final userCart = restaurant.cart ?? [];
+        final userCart = bookstore.cart ?? [];
 
         // Scaffold UI
         return Scaffold(
@@ -47,7 +47,7 @@ class CartPage extends StatelessWidget {
                         TextButton(
                           onPressed: () {
                             Navigator.pop(context);
-                            restaurant.clearCart();
+                            bookstore.clearCart();
                           },
                           child: Text("Yes"),
                         ),
